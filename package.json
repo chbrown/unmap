@@ -1,6 +1,6 @@
 {
   "name": "unmap",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Unpack a JavaScript Source Map back into a filesystem structure",
   "repository": "github:chbrown/unmap",
   "homepage": "https://github.com/chbrown/unmap",
