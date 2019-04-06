@@ -1,0 +1,53 @@
+#!/usr/bin/env node
+const path = require('path')
+
+const parseArgs = require('minimist')
+
+const {dumpFile} = require('..')
+
+const argv = parseArgs(process.argv.slice(2), {
+  boolean: ['help', 'version'],
+  string: ['output', 'sourceRoot'],
+  alias: {
+    help: 'h',
+    version: 'v',
+    output: 'o',
+  },
+  default: {
+    output: process.cwd(),
+  },
+})
+
+if (argv.help) {
+  console.log(`Usage: unmap [options] lib.js.map [lib2.js.map [...]]
+
+Options:
+  --help               Print this help message
+  --version            Print version
+  --sourceRoot string  Override "sourceRoot" field
+  --output path        Output directory (default: current directory)`)
+  process.exit()
+}
+if (argv.version) {
+  console.log(require('../package').version)
+  process.exit()
+}
+
+const inputs = argv._
+if (!inputs.length && !process.stdin.isTTY) {
+  console.error('Reading source map from /dev/stdin')
+  inputs.push('-')
+}
+
+const dumpFilePromises = inputs.map(input => {
+  const filepath = (input == '-') ? '/dev/stdin/' : input
+  return dumpFile(filepath, path.resolve(argv.output), argv.sourceRoot)
+})
+
+Promise.all(dumpFilePromises).then(dumpFileResults => {
+  dumpFileResults.forEach(dumpFileResult => {
+    dumpFileResult.forEach(filepath => console.error(filepath))
+  })
+}, error => {
+  console.log(error.toString())
+})

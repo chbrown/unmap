@@ -1,0 +1,15 @@
+{
+  "name": "unmap",
+  "version": "0.0.1",
+  "description": "Unpack a JavaScript Source Map back into a filesystem structure",
+  "repository": "github:chbrown/unmap",
+  "homepage": "https://github.com/chbrown/unmap",
+  "author": "Christopher Brown <io@henrian.com>",
+  "license": "MIT",
+  "dependencies": {
+    "minimist": "^1.2.0"
+  },
+  "bin": {
+    "unmap": "bin/unmap"
+  }
+}
