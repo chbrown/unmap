@@ -8,18 +8,15 @@ async function spit(filepath, data) {
 }
 
 /**
-Write sourceContent to <dirpath>/<sourceRoot>/<source>, failing if the
-normalized version of that path lies outside dirpath.
+Write sourceContent to <dirpath>/<sourceRoot>/<source>.
 
 Returns (a Promise of) the written filepath (on success).
 */
 async function dumpSource(source, sourceContent, sourceRoot, dirpath) {
   const safeSource = source.replace(/[\x00-\x1f\x80-\x9f\?<>\\:\*\|"]/g, '')
 
-  const sourceFilepath = path.resolve(dirpath, sourceRoot, safeSource)
-  if (!sourceFilepath.startsWith(dirpath)) {
-    throw new Error(`Cannot write to file outside ${dirpath}: ${sourceFilepath}`)
-  }
+  const sourcePath = path.normalize(safeSource)
+  const sourceFilepath = path.join(dirpath, sourceRoot, sourcePath)
 
   await spit(sourceFilepath, sourceContent)
 
